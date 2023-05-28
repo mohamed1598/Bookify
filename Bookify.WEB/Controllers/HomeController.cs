@@ -1,4 +1,4 @@
-﻿using Bookify.WEB.Models;
+﻿using Bookify.WEB.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
