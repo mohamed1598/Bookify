@@ -18,6 +18,22 @@
         "js/bootstrap.bundle.min.js",
         "js/bootstrap.bundle.min.js.map"
       ]
+    },
+    {
+      "library": "bootbox.js@6.0.0",
+      "destination": "wwwroot/lib/bootbox.js/"
+    },
+    {
+      "library": "animate.css@4.1.1",
+      "destination": "wwwroot/lib/animate.css/",
+      "files": [
+        "animate.min.css",
+        "animate.css"
+      ]
+    },
+    {
+      "library": "jquery-ajax-unobtrusive@3.2.6",
+      "destination": "wwwroot/jquery-ajax-unobtrusive/"
     }
   ]
 }
