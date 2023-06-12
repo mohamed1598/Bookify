@@ -42,7 +42,7 @@ function onModalSuccess(row) {
     datatable.row.add(newRow).draw();
 
     KTMenu.init();
-    KTMenu.initHandlers();
+    KTMenu.initGlobalHandlers();
 }
 
 function onModalComplete() {
@@ -185,6 +185,7 @@ $(document).ready(function () {
         var btn = $(this);
 
         bootbox.confirm({
+            title:"Toggle Status",
             message: "Are you sure that you need to toggle this item status?",
             buttons: {
                 confirm: {

@@ -1,8 +1,4 @@
-﻿using AutoMapper;
-using Bookify.WEB.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
+﻿
 namespace Bookify.WEB.Controllers
 {
     public class CategoriesController : Controller
@@ -28,8 +24,9 @@ namespace Bookify.WEB.Controllers
         [HttpPost]
         [AjaxOnly]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CategoryFormViewModel model) {
-            if(!ModelState.IsValid)
+        public IActionResult Create(CategoryFormViewModel model)
+        {
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
@@ -49,8 +46,8 @@ namespace Bookify.WEB.Controllers
             {
                 return BadRequest();
             }
-            var model =_mapper.Map<CategoryFormViewModel>(category) ;
-            return PartialView("_Form",model);
+            var model = _mapper.Map<CategoryFormViewModel>(category);
+            return PartialView("_Form", model);
         }
         [HttpPost]
         [AjaxOnly]

@@ -1,6 +1,4 @@
-﻿using Bookify.WEB.Core.ViewModels;
-using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Bookify.WEB.Controllers
 {
