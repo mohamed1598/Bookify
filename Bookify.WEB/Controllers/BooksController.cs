@@ -26,6 +26,7 @@ namespace Bookify.WEB.Controllers
         public IActionResult Create()
         {
             var viewModel = PopulateViewModel();
+            viewModel.PublishingDate = viewModel.PublishingDate.Date;
             return View("Form",viewModel);
         }
         [HttpPost]
@@ -131,6 +132,13 @@ namespace Bookify.WEB.Controllers
             _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
+        }
+        public IActionResult AllowItem(BookFormViewModel model)
+        {
+            var book = _context.Books.SingleOrDefault(b => b.Title == model.Title && b.AuthorId == model.AuthorId);
+            var isAllowed = book is null || book.Id.Equals(model.Id);
+
+            return Json(isAllowed);
         }
         private BookFormViewModel PopulateViewModel(BookFormViewModel? viewModel = null)
         {

@@ -144,6 +144,29 @@ var KTDatatables = function () {
 }();
 
 $(document).ready(function () {
+    //TinyMCE
+    var options = { selector: ".js-tinymce", height: "422" };
+
+    if (KTThemeMode.getMode() === "dark") {
+        options["skin"] = "oxide-dark";
+        options["content_css"] = "dark";
+    }
+
+    tinymce.init(options);
+
+    //Select2
+    $('.js-select2').select2();
+
+    //Datepicker
+    $('.js-datepicker').daterangepicker({
+        //singleDatePicker: true,
+        autoApply: true,
+        drops: 'up',
+        maxDate: new Date(),
+        //startDate: new Date()
+    });
+    console.log()
+
     //SweetAlert
     var message = $('#Message').text();
     if (message !== '') {
@@ -185,7 +208,6 @@ $(document).ready(function () {
         var btn = $(this);
 
         bootbox.confirm({
-            title:"Toggle Status",
             message: "Are you sure that you need to toggle this item status?",
             buttons: {
                 confirm: {
@@ -201,7 +223,7 @@ $(document).ready(function () {
                 if (result) {
                     $.ajax({
                         url: btn.data('url'),
-                        type: 'delete',
+                        type: "delete",
                         data: {
                             '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
                         },

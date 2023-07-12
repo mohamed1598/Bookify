@@ -20,7 +20,54 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\assets\plugins\datatables\" />
+    <None Include="wwwroot\assets\css\fonts\%40fortawesome\fa-brands-400.woff2" />
+    <None Include="wwwroot\assets\css\fonts\%40fortawesome\fa-regular-400.woff2" />
+    <None Include="wwwroot\assets\css\fonts\%40fortawesome\fa-solid-900.woff2" />
+    <None Include="wwwroot\assets\css\fonts\%40fortawesome\fa-v4compatibility.woff2" />
+    <None Include="wwwroot\assets\css\fonts\bootstrap-icons\bootstrap-icons.woff2" />
+    <None Include="wwwroot\assets\css\fonts\fonticon\fonticon.scss" />
+    <None Include="wwwroot\assets\css\fonts\fonticon\fonticon.svg" />
+    <None Include="wwwroot\assets\css\fonts\fonticon\fonticon.woff2" />
+    <None Include="wwwroot\assets\css\fonts\line-awesome\la-brands-400.svg" />
+    <None Include="wwwroot\assets\css\fonts\line-awesome\la-brands-400.woff2" />
+    <None Include="wwwroot\assets\css\fonts\line-awesome\la-regular-400.svg" />
+    <None Include="wwwroot\assets\css\fonts\line-awesome\la-regular-400.woff2" />
+    <None Include="wwwroot\assets\css\fonts\line-awesome\la-solid-900.svg" />
+    <None Include="wwwroot\assets\css\fonts\line-awesome\la-solid-900.woff2" />
+    <None Include="wwwroot\assets\js\plugins.bundle.js" />
+    <None Include="wwwroot\assets\js\scripts.bundle.js" />
+    <None Include="wwwroot\assets\plugins\datatables\datatables.bundle.js" />
+    <None Include="wwwroot\assets\plugins\tinymce\tinymce.bundle.js" />
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\js\validation-styling.js" />
+    <None Include="wwwroot\lib\assets\js\plugins.bundle.js" />
+    <None Include="wwwroot\lib\assets\js\scripts.bundle.js" />
+    <None Include="wwwroot\lib\bootbox.js\bootbox.js" />
+    <None Include="wwwroot\lib\bootbox.js\bootbox.min.js" />
+    <None Include="wwwroot\lib\bootstrap\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\expressive-annotations-validate\expressive.annotations.validate.js" />
+    <None Include="wwwroot\lib\expressive-annotations-validate\expressive.annotations.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-ajax-unobtrusive\jquery.unobtrusive-ajax.js" />
+    <None Include="wwwroot\lib\jquery-ajax-unobtrusive\jquery.unobtrusive-ajax.min.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
   </ItemGroup>
 
 </Project>

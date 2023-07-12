@@ -8,9 +8,11 @@ namespace Bookify.WEB.Core.ViewModels
         public int Id { get; set; }
 
         [MaxLength(500, ErrorMessage = Errors.MaxLength)]
+        [Remote("AllowItem", null!, AdditionalFields = "Id,AuthorId", ErrorMessage = Errors.Duplicated)]
         public string Title { get; set; } = null!;
 
         [Display(Name = "Author")]
+        [Remote("AllowItem", null!, AdditionalFields = "Id,Title", ErrorMessage = Errors.Duplicated)]
         public int AuthorId { get; set; }
 
         public IEnumerable<SelectListItem>? Authors { get; set; }
@@ -19,9 +21,10 @@ namespace Bookify.WEB.Core.ViewModels
         public string Publisher { get; set; } = null!;
 
         [Display(Name = "Publishing Date")]
+        //[AssertThat("PublishingDate <= Today()", ErrorMessage = Errors.NotAllowFutureDates)]
         public DateTime PublishingDate { get; set; } = DateTime.Now;
 
-        public IFormFile? Image { get; set; }
+         public IFormFile? Image { get; set; }
 
         public string? ImageUrl { get; set; }
 
