@@ -34,6 +34,10 @@
     {
       "library": "jquery-ajax-unobtrusive@3.2.6",
       "destination": "wwwroot/jquery-ajax-unobtrusive/"
+    },
+    {
+      "library": "fslightbox@3.4.1",
+      "destination": "wwwroot/fslightbox/"
     }
   ]
 }

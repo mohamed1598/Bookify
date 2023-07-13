@@ -25,8 +25,12 @@ function showErrorMessage(message = 'Something went wrong!') {
     });
 }
 
-function onModalBegin() {
+function disableSubmitButton() {
     $('body :submit').attr('disabled', 'disabled').attr('data-kt-indicator', 'on');
+
+}
+function onModalBegin() {
+    disableSubmitButton()
 }
 
 function onModalSuccess(row) {
@@ -144,27 +148,38 @@ var KTDatatables = function () {
 }();
 
 $(document).ready(function () {
+    //Disable submit button
+    $('form').on('submit', function () {
+        var isValid = $(this).valid();
+        if(isValid)disableSubmitButton();
+    });
     //TinyMCE
-    var options = { selector: ".js-tinymce", height: "422" };
+    if ($('.js-tinymce').length > 0) {
+        var options = { selector: ".js-tinymce", height: "430" };
 
-    if (KTThemeMode.getMode() === "dark") {
-        options["skin"] = "oxide-dark";
-        options["content_css"] = "dark";
+        if (KTThemeMode.getMode() === "dark") {
+            options["skin"] = "oxide-dark";
+            options["content_css"] = "dark";
+        }
+
+        tinymce.init(options);
     }
-
-    tinymce.init(options);
+    
 
     //Select2
     $('.js-select2').select2();
-
-    //Datepicker
-    $('.js-datepicker').daterangepicker({
-        //singleDatePicker: true,
-        autoApply: true,
-        drops: 'up',
-        maxDate: new Date(),
-        //startDate: new Date()
+    $('.js-select2').on('select2:select', function (e) {
+        var select = $(this);
+        $('form').validate().element('#' + select.attr('id'));
     });
+    //Datepicker
+    //$('.js-datepicker').daterangepicker({
+    //    singleDatePicker: true,
+    //    autoApply: true,
+    //    drops: 'up',
+    //    maxDate: new Date(),
+    //    //startDate: new Date()
+    //});
     console.log()
 
     //SweetAlert
