@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System.Linq.Dynamic.Core;
 
 namespace Bookify.WEB.Controllers
 {
@@ -42,6 +43,28 @@ namespace Bookify.WEB.Controllers
                 return NotFound();
             var viewModel = _mapper.Map<BookViewModel>(book);
             return View(viewModel);
+        }
+        [HttpPost]
+        public IActionResult GetBooks()
+        {
+            var skip = int.Parse(Request.Form["start"]!);
+            var pageSize = int.Parse(Request.Form["length"]!);
+
+            var sortColumnIndex = int.Parse(Request.Form["order[0][column]"]!);
+            var sortColumn = Request.Form[$"columns[{sortColumnIndex}][name]"];
+            var sortColumnDirection = Request.Form["order[0][dir]"];
+
+            var searchValue = Request.Form["search[value]"];
+
+            IQueryable<Book> books = _context.Books.Include(e =>e.Author).Include(e =>e.Categories).ThenInclude(e=>e.Category);
+            if(!string.IsNullOrEmpty(searchValue))
+                books = books.Where(e =>e.Title.Contains(searchValue!) || e.Author.Name.Contains(searchValue!));
+            books = books.OrderBy($"{sortColumn} {sortColumnDirection}");
+            var data = books.Skip(skip).Take(pageSize).ToList();
+            var mappedData = _mapper.Map<IEnumerable<BookViewModel>>(data);
+            var recordsTotal = books.Count();
+            var jsonData = new { recordsFiltered = recordsTotal, recordsTotal, data=mappedData };
+            return Ok(jsonData);
         }
         public IActionResult Create()
         {
@@ -225,6 +248,20 @@ namespace Bookify.WEB.Controllers
             _context.SaveChanges();
 
             return RedirectToAction(nameof(Details), new { id = book.Id });
+        }
+
+        [HttpDelete]
+        [ValidateAntiForgeryToken]
+        public IActionResult ToggleStatus(int id)
+        {
+            var book = _context.Books.Find(id);
+            if (book is null)
+                return NotFound();
+            book.IsDeleted = !book.IsDeleted;
+            book.LastUpdatedOn = DateTime.Now;
+
+            _context.SaveChanges();
+            return Ok(book.LastUpdatedOn.ToString());
         }
         public IActionResult AllowItem(BookFormViewModel model)
         {
