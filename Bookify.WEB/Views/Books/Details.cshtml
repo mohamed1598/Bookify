@@ -1,4 +1,5 @@
 ﻿@model BookViewModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery antiforgery
 
 @{
     ViewData["Title"] = Model.Title;
@@ -12,8 +13,8 @@
             <div class="d-flex flex-wrap flex-sm-nowrap mb-6">
                 <!--begin::Image-->
                 <div class="d-flex flex-center flex-shrink-0 bg-light rounded w-100px h-100px w-lg-150px h-lg-150px me-7 mb-4">
-                    <a data-fslightbox href="@Model.ImageUrl">
-                        <img class="mw-50px mw-lg-75px" src="@Model.ImageThumbnailUrl" alt="@Model.Title" />
+                    <a data-fslightbox href="@(String.IsNullOrEmpty(@Model.ImageUrl)?"/images/books/no-book.jpg" : @Model.ImageUrl)" alt="@Model.Title">
+                        <img class="mw-50px mw-lg-75px" src="@(String.IsNullOrEmpty(Model.ImageThumbnailUrl)?"/images/books/no-book.jpg" : Model.ImageThumbnailUrl)" alt="@Model.Title" />
                     </a>
                 </div>
                 <!--end::Image-->
@@ -104,7 +105,7 @@
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M14.7857 7.125H6.21429C5.62255 7.125 5.14286 7.6007 5.14286 8.1875V18.8125C5.14286 19.3993 5.62255 19.875 6.21429 19.875H14.7857C15.3774 19.875 15.8571 19.3993 15.8571 18.8125V8.1875C15.8571 7.6007 15.3774 7.125 14.7857 7.125ZM6.21429 5C4.43908 5 3 6.42709 3 8.1875V18.8125C3 20.5729 4.43909 22 6.21429 22H14.7857C16.5609 22 18 20.5729 18 18.8125V8.1875C18 6.42709 16.5609 5 14.7857 5H6.21429Z" fill="currentColor" />
                                         </svg>
                                     </span>
-                                    <div class="fs-7 fw-bold" data-kt-countup="true" data-kt-countup-value="7">0</div>
+                                    <div id="CopiesCount" class="fs-7 fw-bold" data-kt-countup="true" data-kt-countup-value="@Model.Copies.Count()">0</div>
                                 </div>
                                 <!--end::Number-->
                                 <!--begin::Label-->
@@ -168,20 +169,70 @@
             <div class="card-header">
                 <!--begin::Card title-->
                 <div class="card-title fs-3 fw-bold">Copies</div>
+                <div class="card-toolbar">
+                    <a class="btn btn-sm btn-primary js-render-modal"
+                       data-title="Add Copy" data-url="/BookCopies/Create?bookId=@Model.Id" >
+                        <i class="bi bi-plus-square-dotted"></i>
+                        Add
+                    </a>
+                </div>
+                
                 <!--end::Card title-->
             </div>
             <!--end::Card header-->
             <div class="card-body">
-                Copies
+                <div class="@(Model.Copies.Any() ? "d-none" : string.Empty) alert alert-dismissible bg-light-warning border border-warning border-3 border-dashed d-flex flex-column flex-sm-row w-100 p-5 mb-10 js-alert">
+                    <!--begin::Icon-->
+                    <!--begin::Svg Icon | path: icons/duotune/general/gen007.svg-->
+                    <span class="svg-icon svg-icon-2hx svg-icon-warning me-4 mb-5 mb-sm-0">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect opacity="0.3" x="2" y="2" width="20" height="20" rx="10" fill="currentColor" />
+                            <rect x="11" y="14" width="7" height="2" rx="1" transform="rotate(-90 11 14)" fill="currentColor" />
+                            <rect x="11" y="17" width="2" height="2" rx="1" transform="rotate(-90 11 17)" fill="currentColor" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                    <!--end::Icon-->
+                    <!--begin::Content-->
+                    <div class="d-flex flex-column pe-0 pe-sm-10">
+                        <h5 class="mb-1">No Copies</h5>
+                        <span>No copies available for this book yet.</span>
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <table class="@(Model.Copies.Any() ? string.Empty : "d-none") table table-row-dashed table-row-gray-300 gy-2 align-middle">
+                    <thead>
+                        <tr>
+                            <th>Serial Number</th>
+                            <th>Edition</th>
+                            <th>Rental?</th>
+                            <th>Status</th>
+                            <th>Created On</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                        
+                    </thead>
+                    <tbody>
+                        @foreach (var copy in Model.Copies.OrderByDescending(c => c.Id))
+                        {
+                           <partial name="_BookCopyRow" model="@copy" />                        }
+                    </tbody>
+                </table>
+                
             </div>
         </div>
         <!--end::Card-->
     </div>
 </div>
+<input type="hidden" name="__RequestVerificationToken" value="@antiforgery.GetAndStoreTokens(Context).RequestToken" />
 
 @section Plugins
     {
     @*<script src="~/assets/plugins/fslightbox/fslightbox.bundle.js"></script>
     <script src="~/fslightbox/index.js"></script>*@
     <script src="~/fslightbox/index.min.js"></script>
+}
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/books-details.js"></script>
 }
