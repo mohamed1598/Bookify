@@ -1,4 +1,14 @@
-﻿				<!--begin::Header-->
+﻿@using System.Security.Claims;
+@inject IWebHostEnvironment WebHostEnvironment
+
+@{
+	var avatarUrl = $"{WebHostEnvironment.WebRootPath}/images/users/{User.FindFirst(ClaimTypes.NameIdentifier)!.Value}.png";
+
+	avatarUrl = System.IO.File.Exists(avatarUrl)
+		? $"/images/users/{User.FindFirst(ClaimTypes.NameIdentifier)!.Value}.png"
+		: "/assets/images/avatar.png";
+}
+				<!--begin::Header-->
 <div id="kt_header" class="header">
 	<!--begin::Container-->
 	<div class="container-fluid d-flex flex-stack">
@@ -127,13 +137,13 @@
 				<div class="btn btn-flex align-items-center bg-hover-white bg-hover-opacity-10 py-2 px-2 px-md-3" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
 					<!--begin::Name-->
 					<div class="d-none d-md-flex flex-column align-items-end justify-content-center me-2 me-md-4">
-						<span class="text-muted fs-8 fw-semibold lh-1 mb-1">Max</span>
-						<span class="text-white fs-8 fw-bold lh-1">UX Designer</span>
+						<span class="text-muted fs-8 fw-semibold lh-1 mb-1">Welcome</span>
+						<span class="text-white fs-8 fw-bold lh-1">@User.FindFirst(ClaimTypes.GivenName)!.Value</span>
 					</div>
 					<!--end::Name-->
 					<!--begin::Symbol-->
 					<div class="symbol symbol-30px symbol-md-40px">
-						<img src="~/assets/images/avatar.png" alt="image" />
+						<img src="@avatarUrl" alt="image" />
 					</div>
 					<!--end::Symbol-->
 				</div>
@@ -145,15 +155,15 @@
 						<div class="menu-content d-flex align-items-center px-3">
 							<!--begin::Avatar-->
 							<div class="symbol symbol-50px me-5">
-								<img alt="Logo" src="~/assets/images/avatar.png" />
+								<img alt="Logo" src="@avatarUrl" />
 							</div>
 							<!--end::Avatar-->
 							<!--begin::Username-->
 							<div class="d-flex flex-column">
 								<div class="fw-bold d-flex align-items-center fs-5">
-									Max Smith
+									@User.FindFirst(ClaimTypes.GivenName)!.Value
 								</div>
-								<a href="#" class="fw-semibold text-muted text-hover-primary fs-7">max@kt.com</a>
+								<a href="#" class="fw-semibold text-muted text-hover-primary fs-7">@User.FindFirst(ClaimTypes.Email)!.Value</a>
 							</div>
 							<!--end::Username-->
 						</div>
@@ -163,18 +173,15 @@
 					<div class="separator my-2"></div>
 					<!--end::Menu separator-->
 					<!--begin::Menu item-->
-					<div class="menu-item px-5">
-						<a href="../../demo14/dist/account/overview.html" class="menu-link px-5">My Profile</a>
-					</div>
-					<!--end::Menu item-->
-					<!--begin::Menu item-->
 					<div class="menu-item px-5 my-1">
-						<a href="../../demo14/dist/account/settings.html" class="menu-link px-5">Account Settings</a>
+						<a asp-area="Identity" asp-page="/Account/Manage/Index" class="menu-link px-5">Account Settings</a>
 					</div>
 					<!--end::Menu item-->
 					<!--begin::Menu item-->
 					<div class="menu-item px-5">
-						<a href="../../demo14/dist/authentication/layouts/corporate/sign-in.html" class="menu-link px-5">Sign Out</a>
+						<form id="SignOut" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+							<a href="javascript:;" type="submit" class="menu-link px-5 js-signout">Sign Out</a>
+						</form>
 					</div>
 					<!--end::Menu item-->
 				</div>

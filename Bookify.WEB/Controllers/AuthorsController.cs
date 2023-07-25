@@ -1,5 +1,6 @@
 ﻿namespace Bookify.WEB.Controllers
 {
+    [Authorize]
     public class AuthorsController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -29,29 +32,36 @@
     <!--end:: page loader-->
     <!--begin::Main-->
     <!--begin::Root-->
-    <div class="d-flex flex-column flex-root">
-        <!--begin::Page-->
-        <div class="page d-flex flex-row flex-column-fluid">
-            <!--begin::Wrapper-->
-            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
-                <partial name="_Header" />
-                <!--begin::Content wrapper-->
-                <div class="d-flex flex-column-fluid pb-11">
-                    <partial name="_Aside" />
-                    <!--begin::Container-->
-                    <div class="d-flex flex-column flex-column-fluid container-fluid">
-                        <div class="content flex-column-fluid" id="kt_content">
-                            @RenderBody()
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="d-flex flex-column flex-root">
+            <!--begin::Page-->
+            <div class="page d-flex flex-row flex-column-fluid">
+                <!--begin::Wrapper-->
+                <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+                    <partial name="_Header" />
+                    <!--begin::Content wrapper-->
+                    <div class="d-flex flex-column-fluid pb-11">
+                        <partial name="_Aside" />
+                        <!--begin::Container-->
+                        <div class="d-flex flex-column flex-column-fluid container-fluid">
+                            <div class="content flex-column-fluid" id="kt_content">
+                                @RenderBody()
+                            </div>
                         </div>
+                        <!--end::Container-->
                     </div>
-                    <!--end::Container-->
+                    <!--end::Content wrapper-->
                 </div>
-                <!--end::Content wrapper-->
+                <!--end::Wrapper-->
             </div>
-            <!--end::Wrapper-->
+            <!--end::Page-->
         </div>
-        <!--end::Page-->
-    </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
     <!--end::Root-->
     <!--end::Main-->
     <!--begin::Scrolltop-->

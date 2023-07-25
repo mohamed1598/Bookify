@@ -1,6 +1,7 @@
 ﻿
 namespace Bookify.WEB.Controllers
 {
+    [Authorize]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -18,7 +18,7 @@ function showErrorMessage(message = 'Something went wrong!') {
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: message,
+        text: message.responseText !== undefined ? message.responseText : message,
         customClass: {
             confirmButton: "btn btn-primary"
         }
@@ -51,6 +51,15 @@ function onModalSuccess(row) {
 
 function onModalComplete() {
     $('body :submit').removeAttr('disabled').removeAttr('data-kt-indicator');
+}
+
+//select2
+function applySelect2() {
+    $('.js-select2').select2();
+    $('.js-select2').on('select2:select', function (e) {
+        var select = $(this);
+        $('form').not('#SignOut').validate().element('#' + select.attr('id'));
+    });
 }
 
 //DataTables
@@ -152,7 +161,7 @@ var KTDatatables = function () {
 
 $(document).ready(function () {
     //Disable submit button
-    $('form').on('submit', function () {
+    $('form').not('#SignOut').on('submit', function () {
         var isValid = $(this).valid();
         if(isValid)disableSubmitButton();
     });
@@ -170,11 +179,7 @@ $(document).ready(function () {
     
 
     //Select2
-    $('.js-select2').select2();
-    $('.js-select2').on('select2:select', function (e) {
-        var select = $(this);
-        $('form').validate().element('#' + select.attr('id'));
-    });
+    applySelect2();
     //Datepicker
     //$('.js-datepicker').daterangepicker({
     //    singleDatePicker: true,
@@ -212,6 +217,7 @@ $(document).ready(function () {
             success: function (form) {
                 modal.find('.modal-body').html(form);
                 $.validator.unobtrusive.parse(modal);
+                applySelect2();
             },
             error: function () {
                 showErrorMessage();
@@ -220,7 +226,10 @@ $(document).ready(function () {
 
         modal.modal('show');
     });
-
+    $('.js-signout').on('click', function () {
+        $('#SignOut').submit();
+        //$(this)
+    })
     //Handle Toggle Status
     $('body').delegate('.js-toggle-status', 'click', function () {
         var btn = $(this);
@@ -263,4 +272,43 @@ $(document).ready(function () {
             }
         });
     });
+    
 });
+$('body').delegate('.unlock-user', 'click', function () {
+    var btn = $(this);
+    bootbox.confirm({
+        message: "Are you sure that you need to unlock this user?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-danger'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-secondary'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    url: btn.data('url'),
+                    type: "post",
+                    data: {
+                        '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (lastUpdatedOn) {
+                        showSuccessMessage();
+                    },
+                    error: function () {
+                        showErrorMessage();
+                    }
+                });
+            }
+        }
+    });
+//});
+    //Handle signout
+    
+});
+
+                             
