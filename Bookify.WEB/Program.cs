@@ -7,6 +7,7 @@ using Bookify.WEB.Data;
 using Bookify.WEB.Helpers;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Bookify.WEB.Services;
+using Microsoft.AspNetCore.DataProtection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 {
     options.ValidationInterval = TimeSpan.Zero;
 });
+builder.Services.AddDataProtection().SetApplicationName(nameof(Bookify));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
