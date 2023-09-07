@@ -17,6 +17,8 @@ namespace Bookify.WEB.Data
         public DbSet<Governerate> Governerates { get; set; }
         public DbSet<Subscriber> Subscribers { get; set; }
         public DbSet<Subscribtion> Subscribtions { get; set; }
+        public DbSet<Rental> Rentals { get; set; }
+        public DbSet<RentalCopy> RentalCopies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,6 +29,7 @@ namespace Bookify.WEB.Data
             builder.HasSequence<int>("SerialNumber", schema: "shared").StartsAt(1000001);
             builder.Entity<BookCopy>().Property(e => e.CreatedOn).HasDefaultValueSql("GetDate()");
             builder.Entity<BookCopy>().Property(e => e.SerialNumber).HasDefaultValueSql("NEXT VALUE FOR shared.SerialNumber");
+            builder.Entity<RentalCopy>().HasKey(e => new {e.RentalId,e.BookCopyId});
 
             var cascadeFKs = builder.Model.GetEntityTypes().SelectMany(t => t.GetForeignKeys())
                 .Where(fk =>fk.DeleteBehavior == DeleteBehavior.Cascade &&!fk.IsOwnership);

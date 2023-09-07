@@ -21,5 +21,7 @@
         public const string InvalidMobileNumber = "Invalid mobile number.";
         public const string InvalidNationalId = "Invalid national ID.";
         public const string EmptyImage = "Please select an image.";
+        public const string InvalidSerialNumber = "Invalid Serial Number.";
+        public const string NotAvailableRental = "Not Available Rental.";
     }
 }

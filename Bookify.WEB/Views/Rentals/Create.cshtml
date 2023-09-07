@@ -1,0 +1,55 @@
+﻿@using Bookify.WEB.Core.Enums;
+@model RentalFormViewModel
+
+@{
+    ViewData["Title"] = "Add Rental";
+}
+
+<!--begin::Card-->
+<div class="card mb-7">
+    <div class="card-header">
+        <h3 class="card-title">Add Rental</h3>
+    </div>
+    <!--begin::Card body-->
+    <div class="card-body">
+        <partial name="_SearchForm" model="new SearchFormViewModel()" />
+    </div>
+    <!--end::Card body-->
+    <div class="card mb-5 mb-xl-8">
+        <!--begin::Header-->
+        <div class="card-header border-0 pt-5">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bold text-dark">Books</span>
+                <span class="text-muted mt-1 fw-semibold fs-7">You can add up to @(
+                    (int)RentalConfigurations.MaxAllowedCopies
+                    ) books</span>
+            </h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body pt-5">
+            <form asp-action="Create" id="CopiesForm">
+                <input type="hidden" asp-for="SubscriberKey" />
+                @* Copies will be added here *@
+                <button type="submit" class="btn btn-primary">
+                    <span class="indicator-label">
+                        Save
+                    </span>
+                    <span class="indicator-progress">
+                        Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </button>
+            </form>
+        </div>
+        <!--end::Body-->
+    </div>
+</div>
+<!--end::Card-->
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var maxAllowedCopies = @((int)RentalConfigurations.MaxAllowedCopies)
+    </script>
+    <script src="/js/rental-form.js" asp-append-version="true"></script>
+}

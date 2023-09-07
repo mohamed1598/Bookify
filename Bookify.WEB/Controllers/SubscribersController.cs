@@ -58,7 +58,9 @@ namespace Bookify.WEB.Controllers
 				.Include(s => s.Governerate)
 				.Include(s => s.Area)
 				.Include(s => s.Subscribtions)
-				.SingleOrDefault(s => s.Id == subscriberId);
+				.Include(s => s.Rentals)
+				.ThenInclude(r => r.RentalCopies)
+                .SingleOrDefault(s => s.Id == subscriberId);
 
 			if (subscriber is null)
 				return NotFound();
@@ -204,8 +206,8 @@ namespace Bookify.WEB.Controllers
 			{
 				return BadRequest();
 			}
-			var lastSubscribtion = subscriber.Subscribtions.Last();
-			var startDate = lastSubscribtion.EndDate < DateTime.Today ? DateTime.Today : lastSubscribtion.EndDate.AddDays(1);
+			var lastSubscribtion = subscriber.Subscribtions.LastOrDefault();
+			var startDate = lastSubscribtion is null ? DateTime.Today : lastSubscribtion.EndDate < DateTime.Today ? DateTime.Today : lastSubscribtion.EndDate.AddDays(1);
 			Subscribtion newSubscription = new()
 			{
 				CreatedById = User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
