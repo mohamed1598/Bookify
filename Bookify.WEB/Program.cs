@@ -8,6 +8,7 @@ using Bookify.WEB.Helpers;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Bookify.WEB.Services;
 using Microsoft.AspNetCore.DataProtection;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,10 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     options.User.RequireUniqueEmail = true;
 }); 
+
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
+builder.Services.AddHangfireServer();
+
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrinicpalFactory>();
 builder.Services.AddTransient<IImageService, ImageService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
@@ -73,6 +78,8 @@ var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityR
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 await DefaultRoles.SeedRolesAsync(roleManager);
 await DefaultUsers.SeedAdminUserAsync(userManager);
+
+app.UseHangfireDashboard("/hangfire");
 
 app.MapControllerRoute(
     name: "default",

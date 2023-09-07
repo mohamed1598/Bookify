@@ -1,5 +1,8 @@
 ﻿using Bookify.WEB.Core.consts;
+using Bookify.WEB.Data.Migrations;
+using Hangfire;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
@@ -12,16 +15,20 @@ namespace Bookify.WEB.Controllers
 		private readonly ApplicationDbContext _context;
 		private readonly IMapper _mapper;
 		private readonly IImageService _imageService;
-		private readonly IDataProtector _dataProtector; 
-		public SubscribersController(ApplicationDbContext context, IMapper mapper, IImageService imageService,IDataProtectionProvider dataProtectionProvider)
-		{
-			_context = context;
-			_mapper = mapper;
-			_imageService = imageService;
-			_dataProtector = dataProtectionProvider.CreateProtector("SubscriberControllerSecrets");
-		}
+		private readonly IDataProtector _dataProtector;
+        private readonly IEmailBodyBuilder _emailBodyBuilder;
+        private readonly IEmailSender _emailSender;
+        public SubscribersController(ApplicationDbContext context, IMapper mapper, IImageService imageService, IDataProtectionProvider dataProtectionProvider, IEmailSender emailSender ,IEmailBodyBuilder emailBodyBuilder)
+        {
+            _context = context;
+            _mapper = mapper;
+            _imageService = imageService;
+            _dataProtector = dataProtectionProvider.CreateProtector("SubscriberControllerSecrets");
+            _emailSender = emailSender;
+			_emailBodyBuilder = emailBodyBuilder;
+        }
 
-		public IActionResult Index()
+        public IActionResult Index()
         {
             return View();
         }
@@ -50,13 +57,19 @@ namespace Bookify.WEB.Controllers
 			var subscriber = _context.Subscribers
 				.Include(s => s.Governerate)
 				.Include(s => s.Area)
+				.Include(s => s.Subscribtions)
 				.SingleOrDefault(s => s.Id == subscriberId);
 
 			if (subscriber is null)
 				return NotFound();
-
+			
 			var viewModel = _mapper.Map<SubscriberViewModel>(subscriber);
-			viewModel.Key = id;
+            if (subscriber.IsBlackListed)
+            {
+                foreach (var sub in viewModel.Subscribtions)
+					sub.Status = SubscriberStatus.Banned;
+            }
+            viewModel.Key = id;
 			return View(viewModel);
 		}
 
@@ -86,6 +99,14 @@ namespace Bookify.WEB.Controllers
 				return View("Form", PopulateViewModel(model));
 			}
 
+			Subscribtion subscribtion = new()
+			{
+				CreatedById = subscriber.CreatedById,
+				CreatedOn = subscriber.CreatedOn,
+				StartDate = DateTime.Today,
+				EndDate = DateTime.Today.AddYears(1)
+			};
+			subscriber.Subscribtions.Add(subscribtion);
 			subscriber.ImageUrl = $"{imagePath}/{imageName}";
 			subscriber.ImageThumbnailUrl = $"{imagePath}/thumb/{imageName}";
 			subscriber.CreatedById = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
@@ -94,7 +115,16 @@ namespace Bookify.WEB.Controllers
 			_context.SaveChanges();
 
 			//TODO: Send welcome email
-
+			var placehoders = new Dictionary<string, string>()
+			{
+				{"imageUrl","https://res.cloudinary.com/devcreed/image/upload/v1668732314/icon-positive-vote-1_rdexez.svg" },
+				{"header",$"Welcome {model.FirstName}," },
+				{"body","thanks for joining bookify" }
+			};
+			var body = _emailBodyBuilder.GetEmailBody(EmailTemplates.Notification, placehoders);
+			BackgroundJob.Enqueue(
+				() => _emailSender.SendEmailAsync(model.Email,"Welcome to bookify",body)
+				); 
 			var subsciberId = _dataProtector.Protect(subscriber.Id.ToString());
 
 			return RedirectToAction(nameof(Details), new { id = subsciberId });
@@ -160,6 +190,35 @@ namespace Bookify.WEB.Controllers
 
 			return RedirectToAction(nameof(Details), new { id = model.Key! });
 		}
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult RenewSubscribtion(string sKey)
+		{
+			var subscriberId = int.Parse(_dataProtector.Unprotect(sKey));
+			var subscriber = _context.Subscribers.Include(s => s.Subscribtions).SingleOrDefault(s => s.Id == subscriberId);
+			if(subscriber is null)
+			{
+				return NotFound();
+			}
+			if (subscriber.IsBlackListed)
+			{
+				return BadRequest();
+			}
+			var lastSubscribtion = subscriber.Subscribtions.Last();
+			var startDate = lastSubscribtion.EndDate < DateTime.Today ? DateTime.Today : lastSubscribtion.EndDate.AddDays(1);
+			Subscribtion newSubscription = new()
+			{
+				CreatedById = User.FindFirst(ClaimTypes.NameIdentifier)!.Value,
+				CreatedOn = DateTime.Now,
+				StartDate = startDate,
+				EndDate = startDate.AddYears(1) 
+			};
+			subscriber.Subscribtions.Add(newSubscription);
+			_context.SaveChanges();
+
+			var viewModel = _mapper.Map<SubscribtionViewModel>(newSubscription);
+			return PartialView("_SubscriptionRow", viewModel);
+		}
 
 		[AjaxOnly]
 		public IActionResult GetAreas(int GovernerateId)
@@ -217,6 +276,5 @@ namespace Bookify.WEB.Controllers
 
 			return viewModel;
 		}
-
 	}
 }

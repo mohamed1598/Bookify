@@ -30,5 +30,6 @@
         [MaxLength(500)]
         public string Address { get; set; } = null!;
         public bool IsBlackListed { get; set; }
+        public ICollection<Subscribtion> Subscribtions { get; set; } = new List<Subscribtion>();
     }
 }

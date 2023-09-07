@@ -1,4 +1,5 @@
-﻿using Bookify.WEB.Core.Models;
+﻿using Bookify.WEB.Core.consts;
+using Bookify.WEB.Core.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using UoN.ExpressiveAnnotations.NetCore.Attributes;
 
@@ -63,6 +64,9 @@ namespace Bookify.WEB.Core.mappings
 				.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
 				.ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area!.Name))
 				.ForMember(dest => dest.Governerate, opt => opt.MapFrom(src => src.Governerate!.Name));
+
+			CreateMap<Subscribtion, SubscribtionViewModel>()
+				.ForMember(dest => dest.Status , opt => opt.MapFrom(src => src.EndDate < DateTime.Today ? SubscriberStatus.InActive : SubscriberStatus.Active));
 		}
     }
 }

@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Bookify.WEB.Core.consts;
 using Bookify.WEB.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -19,19 +20,16 @@ namespace Bookify.WEB.Areas.Identity.Pages.Account.Manage
     public class EmailModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         private readonly IEmailBodyBuilder _emailBodyBuilder;
 
         public EmailModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             IEmailBodyBuilder emailBodyBuilder)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _emailSender = emailSender;
             _emailBodyBuilder = emailBodyBuilder;
         }
@@ -126,16 +124,20 @@ namespace Bookify.WEB.Areas.Identity.Pages.Account.Manage
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
-                    values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
+                    values: new { area = "Identity", userId, email = Input.NewEmail,  code },
                     protocol: Request.Scheme);
 
-                var body = _emailBodyBuilder.GetEmailBody(
-                "https://res.cloudinary.com/devcreed/image/upload/v1668732314/icon-positive-vote-1_rdexez.svg",
-                        $"Hey {user.FullName},",
-                        "please confirm your email",
-                        $"{HtmlEncoder.Default.Encode(callbackUrl!)}",
-                        "Confirm Email"
-                );
+                var placeholders = new Dictionary<string, string>()
+                {
+                    { "imageUrl", "https://res.cloudinary.com/devcreed/image/upload/v1668732314/icon-positive-vote-1_rdexez.svg" },
+                    { "header", $"Hey {user.FullName}," },
+                    { "body", "please confirm your email" },
+                    { "url", $"{HtmlEncoder.Default.Encode(callbackUrl!)}" },
+                    { "linkTitle", "Confirm Email" }
+                };
+
+                var body = _emailBodyBuilder.GetEmailBody(EmailTemplates.Email, placeholders);
+
 
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
@@ -171,16 +173,19 @@ namespace Bookify.WEB.Areas.Identity.Pages.Account.Manage
             var callbackUrl = Url.Page(
                 "/Account/ConfirmEmail",
                 pageHandler: null,
-                values: new { area = "Identity", userId = userId, code = code },
+                values: new { area = "Identity",  userId,  code },
                 protocol: Request.Scheme);
 
-            var body = _emailBodyBuilder.GetEmailBody(
-                "https://res.cloudinary.com/devcreed/image/upload/v1668732314/icon-positive-vote-1_rdexez.svg",
-                        $"Hey {user.FullName},",
-                        "please confirm your email",
-                        $"{HtmlEncoder.Default.Encode(callbackUrl!)}",
-                        "Confirm Email"
-                );
+            var placeholders = new Dictionary<string, string>()
+                {
+                    { "imageUrl", "https://res.cloudinary.com/devcreed/image/upload/v1668732314/icon-positive-vote-1_rdexez.svg" },
+                    { "header", $"Hey {user.FullName}," },
+                    { "body", "please confirm your email" },
+                    { "url", $"{HtmlEncoder.Default.Encode(callbackUrl!)}" },
+                    { "linkTitle", "Confirm Email" }
+                };
+
+            var body = _emailBodyBuilder.GetEmailBody(EmailTemplates.Email, placeholders);
 
             await _emailSender.SendEmailAsync(
                 email,
