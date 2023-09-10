@@ -267,9 +267,9 @@
                         <h3 class="card-title align-items-start flex-column">
                             <span class="card-label fw-bold fs-3 mb-1">Rentals</span>
                         </h3>
-                        @if (!Model.IsBlackListed && lastSubscription is not null && lastSubscription.EndDate >= DateTime.Today.AddDays((int)RentalConfigurations.RentalDuration))
+                        @if (!Model.IsBlackListed)
                         {
-                            <div class="card-toolbar">
+                            <div id="RentalButton" class="card-toolbar @(lastSubscription is null || lastSubscription.EndDate < DateTime.Today.AddDays((int)RentalConfigurations.RentalDuration)?"d-none":"")">
                                 <a asp-controller="Rentals" asp-action="Create" asp-route-sKey="@Model.Key" class="btn btn-sm btn-light-primary">
                                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                                     <span class="svg-icon svg-icon-2">

@@ -23,5 +23,9 @@
         public const string EmptyImage = "Please select an image.";
         public const string InvalidSerialNumber = "Invalid Serial Number.";
         public const string NotAvailableRental = "Not Available Rental.";
+        public const string BlackListedSubscriber = "This subscriber is blacklisted.";
+        public const string InActiveSubscriber = "This subscriber is Inactive.";
+        public const string MaxCopiesReached = "This subscriber has reached the max number for rental.";
+        public const string CopyIsInRental = "This Copy is already in rental.";
     }
 }

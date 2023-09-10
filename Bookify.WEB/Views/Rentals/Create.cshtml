@@ -21,7 +21,7 @@
             <h3 class="card-title align-items-start flex-column">
                 <span class="card-label fw-bold text-dark">Books</span>
                 <span class="text-muted mt-1 fw-semibold fs-7">You can add up to @(
-                    (int)RentalConfigurations.MaxAllowedCopies
+                    Model.MaxAllowedCopies
                     ) books</span>
             </h3>
         </div>
@@ -31,7 +31,7 @@
             <form asp-action="Create" id="CopiesForm">
                 <input type="hidden" asp-for="SubscriberKey" />
                 @* Copies will be added here *@
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary d-none">
                     <span class="indicator-label">
                         Save
                     </span>
@@ -47,9 +47,10 @@
 <!--end::Card-->
 @section Scripts
     {
-    <partial name="_ValidationScriptsPartial" />
     <script>
-        var maxAllowedCopies = @((int)RentalConfigurations.MaxAllowedCopies)
+        var maxAllowedCopies = @Model.MaxAllowedCopies;
+        console.log(maxAllowedCopies);
     </script>
+    <partial name="_ValidationScriptsPartial" />
     <script src="/js/rental-form.js" asp-append-version="true"></script>
 }

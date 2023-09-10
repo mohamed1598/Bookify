@@ -23,7 +23,7 @@ namespace Bookify.WEB.Controllers
             _context = context;
             _mapper = mapper;
             _imageService = imageService;
-            _dataProtector = dataProtectionProvider.CreateProtector("SubscriberControllerSecrets");
+            _dataProtector = dataProtectionProvider.CreateProtector("MySecureKey");
             _emailSender = emailSender;
 			_emailBodyBuilder = emailBodyBuilder;
         }

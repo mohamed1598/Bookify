@@ -27,6 +27,7 @@
 
                             var activeIcon = $('#ActiveStatusIcon');
                             activeIcon.removeClass('d-none');
+                            $('#RentalButton').removeClass('d-none');
                             activeIcon.siblings('svg').remove();
                             activeIcon.parents('.card').removeClass('bg-warning').addClass('bg-success');
 
