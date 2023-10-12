@@ -29,6 +29,9 @@ namespace Bookify.WEB.Data
             builder.HasSequence<int>("SerialNumber", schema: "shared").StartsAt(1000001);
             builder.Entity<BookCopy>().Property(e => e.CreatedOn).HasDefaultValueSql("GetDate()");
             builder.Entity<BookCopy>().Property(e => e.SerialNumber).HasDefaultValueSql("NEXT VALUE FOR shared.SerialNumber");
+            builder.Entity<Rental>().Property(e => e.CreatedOn).HasDefaultValueSql("GetDate()");
+            builder.Entity<Rental>().HasQueryFilter(e => !e.IsDeleted);
+            builder.Entity<RentalCopy>().HasQueryFilter(e => !e.Rental!.IsDeleted);
             builder.Entity<RentalCopy>().HasKey(e => new {e.RentalId,e.BookCopyId});
 
             var cascadeFKs = builder.Model.GetEntityTypes().SelectMany(t => t.GetForeignKeys())

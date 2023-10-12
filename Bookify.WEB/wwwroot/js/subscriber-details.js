@@ -43,4 +43,46 @@
             }
         });
     });
+    $('.js-cancel-rental').on('click', function () {
+
+        var btn = $(this);
+
+        bootbox.confirm({
+            message: "Are you sure that you need to cancel this rental?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-secondary'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.post({
+                        url: `/Rentals/MarkAsDeleted?id=${btn.data('id')}`,
+                        data: {
+                            '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (result) {
+                            btn.parents('tr').remove();
+                            if ($('#RentalsTable tbody tr').length === 0){
+                                $('#RentalsTable').fadeOut(function () {
+                                    $('#Alert').fadeIn();
+
+                                });
+                            }
+                            var totalCount = parseInt($('#no-of-rentals').text());
+                            $('#no-of-rentals').text(totalCount - result);
+                        },
+                        error: function () {
+                            showErrorMessage();
+                        }
+                    });
+                }
+            }
+        });
+    });
 });

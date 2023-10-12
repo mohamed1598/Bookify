@@ -54,15 +54,22 @@ namespace Bookify.WEB.Controllers
 		public IActionResult Details(string id)
 		{
 			int subscriberId = int.Parse(_dataProtector.Unprotect(id));
-			var subscriber = _context.Subscribers
-				.Include(s => s.Governerate)
-				.Include(s => s.Area)
-				.Include(s => s.Subscribtions)
-				.Include(s => s.Rentals)
-				.ThenInclude(r => r.RentalCopies)
+            var subscriber = _context.Subscribers
+                .Include(s => s.Governerate)
+                .Include(s => s.Area)
+                .Include(s => s.Subscribtions)
+                .Include(s => s.Rentals)
+                .ThenInclude(r => r.RentalCopies)
                 .SingleOrDefault(s => s.Id == subscriberId);
+			//var subscriber = _context.Subscribers
+			//	.Include(s => s.Governerate)
+			//	.Include(s => s.Area)
+			//	.Include(s => s.Subscribtions)
+			//	.Include(s => s.Rentals.Where(r => !r.IsDeleted))
+			//	.ThenInclude(r => r.RentalCopies)
+   //             .SingleOrDefault(s => s.Id == subscriberId);
 
-			if (subscriber is null)
+            if (subscriber is null)
 				return NotFound();
 			
 			var viewModel = _mapper.Map<SubscriberViewModel>(subscriber);

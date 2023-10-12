@@ -92,7 +92,7 @@
                     <!--begin::Details item-->
                     <div class="fw-bold mt-5">Date of Birth</div>
                     <div class="text-gray-600">
-                        <p class="text-gray-600 text-hover-primary">@Model.DateOfBirth</p>
+                        <p class="text-gray-600 text-hover-primary">@Model.DateOfBirth.ToString("dd MMM,yyyy")</p>
                     </div>
                     <!--begin::Details item-->
                     <!--begin::Details item-->
@@ -155,7 +155,7 @@
                                             </svg>
                                         </span>
                                         <!--end::Svg Icon-->
-                                        <div class="ms-2">
+                                        <div class="ms-2" id="no-of-rentals">
                                             @Model.Rentals.Sum(r => r.NumberOfCopies)
                                         </div>
                                     </div>
@@ -302,7 +302,7 @@
 
 @section Scripts
     {
-    <script src="~/js/renew.js" asp-append-version="true"></script>
+    <script src="~/js/subscriber-details.js" asp-append-version="true"></script>
 }
 
 @section Plugins

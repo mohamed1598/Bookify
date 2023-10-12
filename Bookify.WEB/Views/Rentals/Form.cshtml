@@ -1,14 +1,14 @@
-﻿@using Bookify.WEB.Core.Enums;
-@model RentalFormViewModel
+﻿@model RentalFormViewModel
 
 @{
-    ViewData["Title"] = "Add Rental";
+    var title = Model.currentCopies.Any() ? "Edit" : "Add";
+    ViewData["Title"] = $"{title} Rental";
 }
 
 <!--begin::Card-->
 <div class="card mb-7">
     <div class="card-header">
-        <h3 class="card-title">Add Rental</h3>
+        <h3 class="card-title">@title Rental</h3>
     </div>
     <!--begin::Card body-->
     <div class="card-body">
@@ -20,17 +20,20 @@
         <div class="card-header border-0 pt-5">
             <h3 class="card-title align-items-start flex-column">
                 <span class="card-label fw-bold text-dark">Books</span>
-                <span class="text-muted mt-1 fw-semibold fs-7">You can add up to @(
-                    Model.MaxAllowedCopies
-                    ) books</span>
+                <span class="text-muted mt-1 fw-semibold fs-7">You can add up to @Model.MaxAllowedCopies book(s)</span>
             </h3>
         </div>
         <!--end::Header-->
         <!--begin::Body-->
         <div class="card-body pt-5">
-            <form asp-action="Create" id="CopiesForm">
+            <form asp-controller="Rentals" id="CopiesForm">
                 <input type="hidden" asp-for="SubscriberKey" />
-                @* Copies will be added here *@
+                
+                @foreach (var copy in Model.currentCopies)
+                {
+                    <partial name="_CopyDetails" model="copy" />
+                }
+
                 <button type="submit" class="btn btn-primary d-none">
                     <span class="indicator-label">
                         Save
@@ -47,10 +50,9 @@
 <!--end::Card-->
 @section Scripts
     {
-    <script>
-        var maxAllowedCopies = @Model.MaxAllowedCopies;
-        console.log(maxAllowedCopies);
-    </script>
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        var maxAllowedCopies = @Model.MaxAllowedCopies
+    </script>
     <script src="/js/rental-form.js" asp-append-version="true"></script>
 }
