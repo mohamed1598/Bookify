@@ -40,6 +40,13 @@
     <None Include="wwwroot\assets\css\fonts\line-awesome\la-regular-400.woff2" />
     <None Include="wwwroot\assets\css\fonts\line-awesome\la-solid-900.svg" />
     <None Include="wwwroot\assets\css\fonts\line-awesome\la-solid-900.woff2" />
+    <None Include="wwwroot\assets\images\401.svg" />
+    <None Include="wwwroot\assets\images\avatar-blank.svg" />
+    <None Include="wwwroot\assets\images\login.svg" />
+    <None Include="wwwroot\assets\images\mail-sent.svg" />
+    <None Include="wwwroot\assets\images\reset-password.svg" />
+    <None Include="wwwroot\assets\images\Vault-bro.svg" />
+    <None Include="wwwroot\assets\images\welocme.svg" />
     <None Include="wwwroot\assets\js\plugins.bundle.js" />
     <None Include="wwwroot\assets\js\scripts.bundle.js" />
     <None Include="wwwroot\assets\plugins\datatables\datatables.bundle.js" />
